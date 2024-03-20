@@ -2,29 +2,21 @@ import { Camera, Vector3 } from "three";
 import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls";
 import { isKeyDown } from "./Input";
 
-export default class FpsControls {
+export default class FpsControls extends PointerLockControls {
   /**
    * @param {Camera} camera
    * @param {HTMLElement} element
    */
   constructor(camera, element) {
-    this._controls = new PointerLockControls(camera, element);
-
+    super(camera, element);
     this._speed = 10;
-  }
-
-  /**
-   * @returns {PointerLockControls}
-   * */
-  get controls() {
-    return this._controls;
   }
 
   /**
    * @param {Number} dt
    */
   update(dt) {
-    if (!this._controls.isLocked) {
+    if (!this.isLocked) {
       return;
     }
 
@@ -52,7 +44,7 @@ export default class FpsControls {
     dir.normalize();
     dir.multiplyScalar(this._speed * dt);
 
-    this._controls.moveRight(dir.x);
-    this._controls.moveForward(dir.z);
+    this.moveRight(dir.x);
+    this.moveForward(dir.z);
   }
 }

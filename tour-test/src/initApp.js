@@ -21,7 +21,7 @@ function createRenderer(canvas) {
 
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setClearColor(0xbb9af7);
+  renderer.setClearColor(0x2E096E);
 
   return renderer;
 }
@@ -33,7 +33,7 @@ function createRenderer(canvas) {
 function addLockEvents(scene) {
   const overlay = document.getElementById("overlay");
 
-  scene._controls.controls.addEventListener("unlock", () => {
+  scene.controls.addEventListener("unlock", () => {
     scene.setControlsLock(false);
     overlay.style.display = "flex";
   });
@@ -46,10 +46,13 @@ function addLockEvents(scene) {
 
 export default async function initApp() {
   const canvas = document.getElementById("three-canvas");
+  const fpsCounter = document.getElementById("fps-counter");
+
   const renderer = createRenderer(canvas);
   const loader = new GLTFLoader();
 
   const scene = new Scene({ loader, canvas, renderer });
+
   await scene.loadModels();
   scene.setup();
   scene.addEventListeners();
@@ -68,6 +71,8 @@ export default async function initApp() {
 
     scene._composer.render(dt);
     // renderer.render(scene, scene.camera);
+
+    fpsCounter.innerText = Math.floor(1 / dt);
 
     requestAnimationFrame(animate);
   }
