@@ -21,7 +21,7 @@ function createRenderer(canvas) {
 
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setClearColor(0x2E096E);
+  renderer.setClearColor(0x2e096e);
 
   return renderer;
 }
@@ -33,9 +33,14 @@ function createRenderer(canvas) {
 function addLockEvents(scene) {
   const overlay = document.getElementById("overlay");
 
-  scene.controls.addEventListener("unlock", () => {
+  scene.controls.addEventListener("fps-unlock", () => {
     scene.setControlsLock(false);
     overlay.style.display = "flex";
+  });
+
+  scene.controls.addEventListener("fps-lock", () => {
+    scene.setControlsLock(true);
+    overlay.style.display = "none";
   });
 
   overlay.addEventListener("pointerdown", () => {
@@ -63,18 +68,24 @@ export default async function initApp() {
   let lastFrameTime = performance.now();
 
   function animate() {
+    requestAnimationFrame(animate);
+
+    if (!scene.controls.isLocked) {
+      return;
+    }
+
     const currentTime = performance.now();
     const dt = (currentTime - lastFrameTime) / 1000;
     lastFrameTime = currentTime;
 
     scene.onRender(dt);
 
-    scene._composer.render(dt);
-    // renderer.render(scene, scene.camera);
+    const fps = Math.floor(1 / dt);
+    const pos = scene.camera.position.toArray().map(Math.floor).join(" ");
 
-    fpsCounter.innerText = Math.floor(1 / dt);
-
-    requestAnimationFrame(animate);
+    fpsCounter.innerText = `fps: ${fps}
+      pos: ${pos}
+    `;
   }
 
   animate();

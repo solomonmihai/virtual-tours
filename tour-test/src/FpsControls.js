@@ -47,4 +47,28 @@ export default class FpsControls extends PointerLockControls {
     this.moveRight(dir.x);
     this.moveForward(dir.z);
   }
+
+  /**
+   * @param {boolean} emitEvent
+   * @override dispatch custom event for locking
+   */
+  lock(emitEvent = true) {
+    super.lock();
+
+    if (emitEvent) {
+      this.dispatchEvent("fps-lock");
+    }
+  }
+
+  /**
+   * @param {boolean} emitEvent
+   * @override dispatch custom event for unlocking
+   */
+  unlock(emitEvent = true) {
+    super.unlock();
+
+    if (emitEvent) {
+      this.dispatchEvent("fps-unlock");
+    }
+  }
 }
